@@ -1,0 +1,91 @@
+.field {
+    margin: 120px auto 0 auto;
+    background-color: darkgreen;
+    width: 600px;
+    height: 600px;
+    text-align: center;
+    display: none;
+}
+.cell {
+    background-color: bisque;
+    height: 180px;
+    width: 180px;
+    display: inline-block;
+    position: relative;
+}
+.cell:hover {
+    transition: background-color .3s ease-in 0.3ms;
+    background-color: #ffc780;
+}
+.cell:active {
+    transition: background-color .2s ease-in 0.2ms;
+    background-color: darkgreen;
+}
+.cross, .zero {
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+.cross:after {
+    background-color: green;
+    content: "x";
+    position: absolute;
+    width: 100%;
+    top: 45%;
+    left: 0;
+    transform: rotate(45deg);
+    color: green;
+}
+.cross:before {
+    background-color: green;
+    content: "x";
+    position: absolute;
+    width: 100%;
+    top: 45%;
+    right: 0;
+    transform: rotate(-45deg);
+    color: green;
+}
+.zero {
+    width: 100%;
+    height: 100%;
+    background: darkred;
+    border-radius: 50%;
+    position: relative;
+}
+.zero::after {
+    position: absolute;
+    content: "o";
+    background-color: bisque;
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    left: 27px;
+    top: 27px;
+    color:  bisque;
+}
+.choice {
+    position: absolute;
+    left: 35%;
+    top: 30%;
+    width: 400px;
+    background-color: darkgoldenrod;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+.choice__text {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+.button {
+    background-color:  white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+.button:active {
+    background-color: antiquewhite;
+}
