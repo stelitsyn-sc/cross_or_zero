@@ -1,83 +1,110 @@
 "use strict";
-const CROSS = 1;
-const ZERO = 2;
+const CROSS = "1";
+const ZERO = "2";
 const CELL_MAX = 9;
+
 function renderGame() {
     return {
-        initialize: function () {
-            let buttons = document.getElementsByClassName("button");
-            [].forEach.call(buttons, function (el) {
-                el.onclick = function () {
-                    game().start(this.getAttribute("value"));
-                }
-            });
+        getChoiceButton() {
+            return Array.from(document.getElementsByClassName("button"));
         },
-        displayField: function () {
+        displayField() {
             this.fillField();
-            this.hideChoice();
+            this.hideChoiceMenu();
             document.getElementById('field').style.display = "block";
         },
-        hideChoice: function () {
+        hideChoiceMenu() {
             document.getElementById('choice').style.display = "none";
         },
-        fillField: function () {
+        makeDiv() {
+            return document.createElement("div");
+        },
+        makeElemCell() {
+            let cell = this.makeDiv();
+            cell.className = "cell";
+            return cell;
+        },
+        fillField() {
             let field = document.getElementById("field");
             for (let i = 0; i < CELL_MAX; i++) {
-                let cell = document.createElement("div");
-                cell.onclick = function () {
-                    game().nextStep(this);
-                };
-                cell.className = "cell";
-                field.append(cell);
+                field.append(this.makeElemCell());
             }
         },
-        fillCell: function (cell, state) {
-            let elemState = document.createElement("div");
+        fillCell(cell, state) {
+            let elemDiv = this.makeDiv();
+            this.setState(elemDiv, state);
+            cell.target.append(elemDiv);
+        },
+        setState(elem, state) {
             if (state === true) {
-                elemState.className = "cross";
+                elem.className = "cross";
             } else {
-                elemState.className = "zero";
+                elem.className = "zero";
             }
-            cell.append(elemState);
+            return elem;
         },
         getCells: function () {
-            return document.getElementsByClassName('cell');
+            return Array.from(document.getElementsByClassName('cell'));
+        }
+    }
+}
+
+function eventHandler() {
+    return {
+        onClickChoiceButton(buttons, hanlder) {
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = hanlder;
+            }
+        },
+        onClickCell(cells, handler) {
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].onclick = handler;
+            }
         }
     }
 }
 
 function game() {
-
-    return  {
+    let render = renderGame();
+    let event = eventHandler();
+    let game = {
         step: 0,
+        /** true === CROSS; false === zero; */
         currentPlayer: true,
-        initialize: function () {
-            renderGame().initialize();
+        initialize() {
+            event.onClickChoiceButton(render.getChoiceButton(), game.start);
         },
-        start: function (firstState) {
-            renderGame().displayField();
+        start(firstState) {
+            if (firstState.target.getAttribute("value") === ZERO) {
+                game.currentPlayer = false;
+            }
+            render.displayField();
+            event.onClickCell(render.getCells(), game.nextStep);
         },
-        nextStep: function (elem) {
-            if (elem.hasChildNodes()) {
+        nextStep(elem) {
+            if (elem.target.hasChildNodes()) {
                 alert("You don`t choose this cell!");
-                return;
-            }
-            //change player
-            renderGame().fillCell(elem, this.currentPlayer);
-            this.step++;
-            if (this.step >= 5) {
-                this.checkEndGame();
-            }
-        },
-        checkEndGame: function () {
-            for (let i = 0; i < renderGame().getCells().length; i++) {
-
+            } else {
+                game.currentPlayer = !game.currentPlayer;
+                render.fillCell(elem, game.currentPlayer);
+                game.step++;
+                if (game.step >= 5) {
+                    game.checkEndGame();
+                }
             }
         },
-        end: function () {
+        checkEndGame() {
+            let cells = render.getCells();
+            for (let i = 0; i < cells.length; i++) {
+                console.log(cells[i]);
+            }
+        },
+        end() {
 
         }
     };
+
+    return game;
 }
 
 game().initialize();
