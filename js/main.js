@@ -82,9 +82,10 @@ function game() {
             event.onClickCell(render.getCells(), game.nextStep);
         },
         nextStep(elem) {
-            if (elem.target.hasChildNodes()) {
+            if (elem.currentTarget.hasChildNodes()) {
                 alert("You don`t choose this cell!");
             } else {
+                
                 game.currentPlayer = !game.currentPlayer;
                 render.fillCell(elem, game.currentPlayer);
                 game.step++;
